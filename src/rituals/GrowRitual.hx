@@ -11,4 +11,8 @@ class GrowRitual implements Ritual {
         } //:todo: communicate this better
         return false;
     }
+
+    public function cleanup(plant:Plant) {
+        
+    }
 }

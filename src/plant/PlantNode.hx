@@ -1,5 +1,6 @@
 package plant;
 import luxe.Vector;
+import phoenix.geometry.Vertex;
 
 class PlantNode {
     public var pos:Vector;
@@ -10,6 +11,8 @@ class PlantNode {
     public var parent:PlantNode;
     public var children:Array<PlantNode>;
 
+    public var vertices:Array<Vertex>; //
+
     public function new(_pos:Vector, _angle:Float, _length:Float, _parent:PlantNode) {
         pos = _pos;
         angle = _angle;
@@ -17,5 +20,6 @@ class PlantNode {
         segment = new Vector(Math.cos(angle) * length, Math.sin(angle) * length);
         parent = _parent;
         children = [];
+        vertices = [];
     }
 }

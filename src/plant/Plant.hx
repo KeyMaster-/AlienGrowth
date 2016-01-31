@@ -162,6 +162,11 @@ class Plant extends Visual {
             geometry.vertices.push(top_left_vert);
             geometry.vertices.push(top_right_vert);
 
+            leaf.vertices.push(low_left_vert);
+            leaf.vertices.push(top_left_vert);
+            leaf.vertices.push(low_right_vert);
+            leaf.vertices.push(top_right_vert);
+
             tweenVertTo(top_left_vert, top_left);
             tweenVertTo(top_right_vert, top_right);
         }

@@ -19,6 +19,8 @@ class RitualManager extends Entity {
 
     var ritual_tokens:Array<Geometry>;
 
+    var executed_rituals:Array<Ritual>;
+
     var sigil_size:Float;
     var sigil_spacing:Float = 20;
     var sigil_color:Color;
@@ -47,6 +49,7 @@ class RitualManager extends Entity {
         target_right = new Vector(Luxe.screen.mid.x + Luxe.screen.mid.x / 2 - sigil_size / 2, Luxe.screen.mid.y - sigil_size / 2);
         center_pos = new Vector(Luxe.screen.mid.x - sigil_size / 2, Luxe.screen.mid.y - sigil_size / 2);
         ritual_tokens = [];
+        executed_rituals = [];
     }
 
     override public function init() {
@@ -139,6 +142,7 @@ class RitualManager extends Entity {
 
     function onSigilSelect(n:Int) {
         if(ritual_sigil_count == 2) return;
+        if(left_sigil == n) return;
         if(ritual_sigil_count == 0) {
             if(left_sigil != -1) return;
             left_sigil = n;
@@ -174,6 +178,7 @@ class RitualManager extends Entity {
     }
 
     function runRitualEffect() {
+        if(ritual_count == 0) return;
         var ritual_signature = '$left_sigil$right_sigil';
         var ritual:Ritual = switch(ritual_signature) {
             case '01':
@@ -185,14 +190,20 @@ class RitualManager extends Entity {
             case '10':
                 new EmptyRitual();
             case '12':
-                new EmptyRitual();
+                new LeafRitual();
             case '13':
                 new EmptyRitual();
             case '20':
-                new EmptyRitual();
+                new VertMoveRitual();
             case '21':
                 new EmptyRitual();
             case '23':
+                new EmptyRitual();
+            case '30':
+                new EmptyRitual();
+            case '31':
+                new BlinkRitual();
+            case '32':
                 new EmptyRitual();
             case _:
                 new EmptyRitual();
@@ -201,9 +212,7 @@ class RitualManager extends Entity {
             ritual_count--;
             Delta.tween(ritual_tokens[ritual_count].color)
                 .prop('a', 0, 0.5).ease(Sine.easeInOut);
-        }
-        if(ritual_count == 0) {
-            trace('finish plant');
+            executed_rituals.push(ritual);
         }
     }
 
@@ -226,6 +235,10 @@ class RitualManager extends Entity {
         }
 
         resetSigilSelect();
+        for(ritual in executed_rituals) {
+            ritual.cleanup(plant);
+        }
+        executed_rituals = [];
     }
 
     function moveSigil(geom:Geometry) {

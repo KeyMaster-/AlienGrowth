@@ -5,8 +5,11 @@ class EmptyRitual implements Ritual {
     public function new() {}
 
     public function run(plant:Plant) {
-        trace('Ran empty ritual');
-        return false;
+        var nodes = [plant.root];
+        while(nodes.length != 0) {
+            
+        }
+        return true;
     }
 
     public function cleanup(plant:Plant) {
