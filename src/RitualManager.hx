@@ -27,7 +27,7 @@ class RitualManager extends Entity {
 
     var ritual_sigil_count:Int = 0;
 
-    var ritual_count:Int = 5;
+    var ritual_count:Int = 3;
 
     var target_left:Vector;
     var target_right:Vector;
@@ -56,13 +56,21 @@ class RitualManager extends Entity {
         var sigil_x_pos:Float = sigil_size / 2;
         var sigil_y_pos:Float = Luxe.screen.h - sigil_size * 1.5;
 
-        for(i in 0...4) {
+        var letters = ['A', 'S', 'D'];
+        for(i in 0...3) {
             sigils[i] = new Geometry({
                 primitive_type:PrimitiveType.triangle_strip,
                 batcher:Luxe.renderer.batcher
             });
             sigils[i].transform.pos.set_xy(sigil_x_pos, sigil_y_pos);
             sigil_positions.push(new Vector(sigil_x_pos, sigil_y_pos));
+            Luxe.draw.text({
+                text:letters[i],
+                pos:new Vector(sigil_x_pos + sigil_size / 2, sigil_y_pos - sigil_size),
+                align:phoenix.BitmapFont.TextAlign.center,
+                color:sigil_color,
+                point_size:32 * Luxe.screen.device_pixel_ratio
+            });
             sigil_x_pos += sigil_size + sigil_spacing;
         }
 
@@ -82,10 +90,10 @@ class RitualManager extends Entity {
         sigils[2].add(new Vertex(new Vector(sigil_size * 1 / 3, sigil_size), sigil_color));
         sigils[2].add(new Vertex(new Vector(sigil_size, sigil_size * 1 / 3), sigil_color));
 
-        sigils[3].add(new Vertex(new Vector(0, sigil_size * 1 / 3), sigil_color));
-        sigils[3].add(new Vertex(new Vector(sigil_size * 2 / 3, sigil_size), sigil_color));
-        sigils[3].add(new Vertex(new Vector(sigil_size * 1 / 3, 0), sigil_color));
-        sigils[3].add(new Vertex(new Vector(sigil_size, sigil_size * 2 / 3), sigil_color));
+        // sigils[3].add(new Vertex(new Vector(0, sigil_size * 1 / 3), sigil_color));
+        // sigils[3].add(new Vertex(new Vector(sigil_size * 2 / 3, sigil_size), sigil_color));
+        // sigils[3].add(new Vertex(new Vector(sigil_size * 1 / 3, 0), sigil_color));
+        // sigils[3].add(new Vertex(new Vector(sigil_size, sigil_size * 2 / 3), sigil_color));
 
         var token_y_pos = Luxe.screen.h - sigil_size;
         for(i in 0...ritual_count) {
@@ -134,8 +142,8 @@ class RitualManager extends Entity {
                 onSigilSelect(1);
             case Key.key_3 | Key.key_d:
                 onSigilSelect(2);
-            case Key.key_4 | Key.key_f:
-                onSigilSelect(3);
+            // case Key.key_4 | Key.key_f:
+            //     onSigilSelect(3);
                
         }
     }
@@ -182,29 +190,17 @@ class RitualManager extends Entity {
         var ritual_signature = '$left_sigil$right_sigil';
         var ritual:Ritual = switch(ritual_signature) {
             case '01':
-                new EmptyRitual();
+                new RotationRitual();
             case '02':
-                new EmptyRitual();
-            case '03':
                 new GrowRitual();
             case '10':
-                new EmptyRitual();
+                new BlinkRitual();
             case '12':
                 new LeafRitual();
-            case '13':
-                new EmptyRitual();
             case '20':
                 new VertMoveRitual();
             case '21':
-                new EmptyRitual();
-            case '23':
-                new EmptyRitual();
-            case '30':
-                new EmptyRitual();
-            case '31':
-                new BlinkRitual();
-            case '32':
-                new EmptyRitual();
+                new SquaresRitual();
             case _:
                 new EmptyRitual();
         }
@@ -223,7 +219,7 @@ class RitualManager extends Entity {
     }
 
     public function reset() {
-        ritual_count = 5;
+        ritual_count = 3;
         for(i in 0...ritual_count) {
             Delta.tween(ritual_tokens[i].color)
                 .prop('a', 1, 0.3);

@@ -39,6 +39,12 @@ class Main extends luxe.Game {
         bg_geom.add(new Vertex(new Vector(Luxe.screen.w, 0), upperColor));
 
         rituals = new RitualManager(plant);
+
+        Luxe.draw.text({
+            text:'R - New plant',
+            point_size:32 * Luxe.screen.device_pixel_ratio,
+            pos:new Vector(20, 10)
+        });
     } //ready
 
     override function onkeyup( e:KeyEvent ) {
@@ -116,9 +122,7 @@ class Main extends luxe.Game {
         length_width_ratio_upper:0.15,
 
         root_len_lower:120,
-        root_len_upper:220
-
-        
+        root_len_upper:320
     }
 
     function makeRandomGenInfo():PlantGenInfo {
